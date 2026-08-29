@@ -114,21 +114,115 @@
     chatMsgs.scrollTop = chatMsgs.scrollHeight;
   }
 
+  /* Scripted assistant — only answers using information already published on
+     the site. Pricing is always redirected to Contact; anything unrelated to
+     4 Seasons Mechanical gets a polite, professional decline. Each topic has
+     a few phrasings so replies don't feel copy-pasted. */
+  function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+  const PRICING_RE = /\b(price|pricing|cost|costs|how much|estimate|rate|rates|fee|fees|cheap|expensive|afford)\b/;
+  const YEARS_RE = /how long|years?( of)? experience|in business|been around|established|founded|how old is/;
+  const GREETING_RE = /\b(hi|hello|hey|good morning|good afternoon|good evening|thanks|thank you)\b/;
+  const BUSINESS_RE = /\b(hvac|heat|heating|furnace|duct|air ?condition|a\/c|\bac\b|cool|cooling|plumb|drain|leak|water heater|pipe|repip|fixture|electric|wiring|wire|panel|light|ev charger|charger|emergency|urgent|no heat|hour|open|closed|service area|location|address|calgary|appointment|book|schedule|quote|warranty|guarantee|licens|insur|new construction|builder|basement suite|contact|phone|email|technician|repair|install|maintenance|tune-up|review|rating|company|business|4 seasons|about|team|service|services)\b/;
+
+  const REPLIES = {
+    pricing: [
+      "Pricing depends on the specific job, so I can't quote a number here — contact us directly or submit our quote form and the team will follow up with accurate pricing.",
+      "That varies job to job, so I'll leave the actual number to the team — reach out through our Contact page or call us and we'll get you a proper quote.",
+      "I'm not able to give pricing here, but it's free to ask — fill out the quote form or give us a call and we'll quote your job directly."
+    ],
+    emergency: [
+      "That sounds urgent — please call us right away at (403) 796-4600 for 24/7 emergency service.",
+      "For anything urgent like that, don't wait on me — call (403) 796-4600 now, we're available 24/7."
+    ],
+    years: [
+      "We've been proudly serving Calgary and the surrounding areas for over 20 years, with 500+ jobs completed and a 5.0★ customer rating.",
+      "4 Seasons Mechanical has over 20 years of experience in the Calgary area — 500+ jobs completed and counting."
+    ],
+    basement: [
+      "We offer complete mechanical packages for legal basement suites — HVAC, plumbing, and electrical all covered. Contact us to discuss your project.",
+      "Legal basement suites are one of our specialties — full mechanical packages covering heating, plumbing, and electrical. Reach out to get started."
+    ],
+    newConstruction: [
+      "We partner with home builders on new construction projects, handling HVAC, plumbing, and electrical rough-ins through final walkthrough. See the Home page or contact us for details.",
+      "New construction is something we work on directly with builders — rough-ins through final walkthrough for HVAC, plumbing, and electrical. Contact us to talk about your build."
+    ],
+    plumbing: [
+      "We handle leak repairs, water heater installation and repair, drain cleaning, repiping, and fixture installation — see our Plumbing page for the full list.",
+      "On the plumbing side we cover leaks, water heaters, drain cleaning, repiping, and fixtures — check the Plumbing page for more."
+    ],
+    electrical: [
+      "Our electrical services include panel upgrades, wiring and rewiring, lighting installation, and EV charger installation — see our Electrical page for details.",
+      "For electrical work we do panel upgrades, wiring, lighting, and EV chargers — full details are on the Electrical page."
+    ],
+    hvac: [
+      "We specialize in furnace and air conditioner installation, repair, and maintenance, plus furnace and duct cleaning — check out the Home page for our full HVAC lineup.",
+      "Heating and cooling is our specialty — furnace and AC installs, repairs, maintenance, and duct cleaning. More on the Home page."
+    ],
+    hours: [
+      "We're available 24/7 for emergencies, with standard hours Monday–Friday. Check the Contact page for full details.",
+      "Standard hours are Monday–Friday, and we're on call 24/7 for emergencies — see the Contact page for specifics."
+    ],
+    location: [
+      "We're located in Calgary, AB and serve Calgary and the surrounding areas.",
+      "We're based in Calgary, AB, serving Calgary and the surrounding communities."
+    ],
+    licensing: [
+      "We're fully licensed and insured, with certified technicians and a satisfaction guarantee on every job.",
+      "Every technician is licensed, insured, and certified — and we back our work with a satisfaction guarantee."
+    ],
+    contact: [
+      "You can reach us at (403) 796-4600 or info@4seasonsmechanical.ca, or use the form on our Contact page.",
+      "Best ways to reach us: (403) 796-4600, info@4seasonsmechanical.ca, or the Contact page form."
+    ],
+    genericBusiness: [
+      "Thanks for the question — for more detail, please visit our Contact page or call us directly and our team can help.",
+      "Good question — I'd point you to our Contact page or a quick call so the team can give you a proper answer."
+    ],
+    greeting: [
+      "Hello! I'm the 4 Seasons virtual assistant. Ask me about our heating, cooling, plumbing, or electrical services, our hours, service area, or how to get a free quote.",
+      "Hi there! Happy to help — ask about our HVAC, plumbing, or electrical services, hours, service area, or getting a free quote."
+    ],
+    decline: [
+      "I'm sorry, I'm only able to help with questions about 4 Seasons Mechanical's services. For anything else, please reach out to our team directly.",
+      "I'm afraid that's outside what I can help with — I'm limited to questions about 4 Seasons Mechanical's services. Feel free to contact our team directly for anything else."
+    ]
+  };
+
   function botReply(userText) {
     const t = userText.toLowerCase();
-    let reply = "Thanks for reaching out! For anything urgent, call us directly and a technician will help right away. Otherwise, tell me a bit more and I'll point you in the right direction.";
-    if (t.includes('emergency') || t.includes('urgent') || t.includes('no heat') || t.includes('no ac')) {
-      reply = "That sounds urgent — please call us right away for 24/7 emergency service. I can also grab your info if you'd rather we call you back.";
-    } else if (t.includes('price') || t.includes('cost') || t.includes('quote')) {
-      reply = "Pricing depends on the job, but we're happy to give you a free, no-obligation quote. Want to fill out our quick contact form?";
-    } else if (t.includes('plumb')) {
-      reply = "We handle everything from leak repairs to full repipes — check out our Plumbing page for details, or I can pass your request to the team.";
-    } else if (t.includes('electric')) {
-      reply = "Our electrical team covers panel upgrades, wiring, EV chargers and more — see the Electrical page, or let me know what you need help with.";
-    } else if (t.includes('hvac') || t.includes('heat') || t.includes('furnace') || t.includes('cool') || t.includes('ac')) {
-      reply = "Heating and cooling is our specialty. Is this a repair, a new install, or a maintenance visit you're after?";
-    } else if (t.includes('hour') || t.includes('open')) {
-      reply = "We're available 24/7 for emergencies, with standard hours Mon–Fri. Check the Contact page for full details.";
+    let reply;
+
+    if (PRICING_RE.test(t)) {
+      reply = pick(REPLIES.pricing);
+    } else if (t.includes('emergency') || t.includes('urgent') || t.includes('no heat') || t.includes('no ac')) {
+      reply = pick(REPLIES.emergency);
+    } else if (YEARS_RE.test(t)) {
+      reply = pick(REPLIES.years);
+    } else if (/basement suite/.test(t)) {
+      reply = pick(REPLIES.basement);
+    } else if (/new construction|builder/.test(t)) {
+      reply = pick(REPLIES.newConstruction);
+    } else if (/plumb|drain|leak|water heater|\bpipe\b|repip|fixture/.test(t)) {
+      reply = pick(REPLIES.plumbing);
+    } else if (/electric|wiring|wire|panel|light|ev charger|charger/.test(t)) {
+      reply = pick(REPLIES.electrical);
+    } else if (/hvac|heat|furnace|duct|air ?condition|a\/c|\bac\b|cool/.test(t)) {
+      reply = pick(REPLIES.hvac);
+    } else if (/hour|open|closed/.test(t)) {
+      reply = pick(REPLIES.hours);
+    } else if (/location|address|service area|calgary/.test(t)) {
+      reply = pick(REPLIES.location);
+    } else if (/licens|insur|warranty|guarantee/.test(t)) {
+      reply = pick(REPLIES.licensing);
+    } else if (/contact|phone|email|book|schedule|appointment/.test(t)) {
+      reply = pick(REPLIES.contact);
+    } else if (BUSINESS_RE.test(t)) {
+      reply = pick(REPLIES.genericBusiness);
+    } else if (GREETING_RE.test(t)) {
+      reply = pick(REPLIES.greeting);
+    } else {
+      reply = pick(REPLIES.decline);
     }
     setTimeout(() => addMsg(reply, 'bot'), 550);
   }
