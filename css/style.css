@@ -351,17 +351,12 @@ nav.main-nav a.active { color: var(--blue-600); }
   position: relative;
   width: 100%;
   aspect-ratio: 4/5;
-  border-radius: 24px;
-  background: var(--accent-gradient);
   display: flex; align-items: center; justify-content: center;
-  box-shadow: var(--shadow);
-  overflow: hidden;
 }
-.hero-visual-card img { width: 62%; filter: drop-shadow(0 20px 30px rgba(0,0,0,0.35)); }
-.hero-visual-ring {
-  position: absolute; inset: 18px;
-  border: 1.5px dashed rgba(255,255,255,0.35);
-  border-radius: 18px;
+.hero-visual-card svg.hero-illustration {
+  width: 92%;
+  height: auto;
+  filter: drop-shadow(var(--shadow));
 }
 
 /* ── Service Icon Badges (mirrors logo badges) ───────────── */
