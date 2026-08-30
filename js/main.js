@@ -2,6 +2,26 @@
 (function () {
   const html = document.documentElement;
 
+  /* Preloader: walking handyman intro */
+  const preloader = document.getElementById('preloader');
+  if (preloader) {
+    const plWalker = document.getElementById('plWalker');
+    const plBrand = document.getElementById('plBrand');
+    const plOverlay = document.getElementById('plOverlay');
+    const plSkip = document.getElementById('plSkip');
+    let plTimers = [];
+
+    plTimers.push(setTimeout(() => plWalker.classList.add('pl-arrived'), 2200));
+    plTimers.push(setTimeout(() => plBrand.classList.add('pl-show'), 2650));
+    plTimers.push(setTimeout(() => plOverlay.classList.add('pl-reveal'), 3500));
+    plTimers.push(setTimeout(() => preloader.classList.add('pl-hidden'), 4200));
+
+    plSkip.addEventListener('click', () => {
+      plTimers.forEach(clearTimeout);
+      preloader.classList.add('pl-hidden');
+    });
+  }
+
   /* Theme toggle */
   const saved = localStorage.getItem('fsm-theme') || 'light';
   html.dataset.theme = saved;
