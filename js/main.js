@@ -310,14 +310,15 @@
   chatSend && chatSend.addEventListener('click', sendMsg);
   chatInput && chatInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') sendMsg(); });
 
-  /* Contact form — Netlify Forms AJAX submit */
+  /* Contact form — Formspree AJAX submit */
   const contactForm = document.getElementById('contactForm');
   if (contactForm) {
     contactForm.addEventListener('submit', function (e) {
       e.preventDefault();
       const data = new FormData(contactForm);
-      fetch('/', { method: 'POST', body: new URLSearchParams(data).toString(), headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
-        .then(() => {
+      fetch(contactForm.action, { method: 'POST', body: data, headers: { 'Accept': 'application/json' } })
+        .then((response) => {
+          if (!response.ok) throw new Error('Form submission failed');
           contactForm.style.display = 'none';
           document.getElementById('formSuccess').classList.add('show');
         })
