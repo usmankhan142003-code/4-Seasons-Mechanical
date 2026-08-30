@@ -31,7 +31,7 @@
     testimonialsTrack.innerHTML = REVIEWS.map(reviewCard).join('') + REVIEWS.map(reviewCard).join('');
   }
 
-  /* Preloader: walking handyman intro — only replays on an actual page
+  /* Preloader: logo + icon pulse intro — only replays on an actual page
      refresh, not when navigating back to Home via a link/logo click. */
   const preloader = document.getElementById('preloader');
   if (preloader) {
@@ -44,16 +44,11 @@
     } else {
       sessionStorage.setItem('fsm-intro-seen', '1');
 
-      const plWalker = document.getElementById('plWalker');
-      const plBrand = document.getElementById('plBrand');
-      const plOverlay = document.getElementById('plOverlay');
       const plSkip = document.getElementById('plSkip');
       let plTimers = [];
 
-      plTimers.push(setTimeout(() => plWalker.classList.add('pl-arrived'), 2200));
-      plTimers.push(setTimeout(() => plBrand.classList.add('pl-show'), 2650));
-      plTimers.push(setTimeout(() => plOverlay.classList.add('pl-reveal'), 3500));
-      plTimers.push(setTimeout(() => preloader.classList.add('pl-hidden'), 4200));
+      plTimers.push(setTimeout(() => preloader.classList.add('pl-fade-out'), 2500));
+      plTimers.push(setTimeout(() => preloader.classList.add('pl-hidden'), 3100));
 
       plSkip.addEventListener('click', () => {
         plTimers.forEach(clearTimeout);
