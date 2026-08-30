@@ -2,24 +2,64 @@
 (function () {
   const html = document.documentElement;
 
-  /* Preloader: walking handyman intro */
+  /* Testimonials ticker — real Google reviews */
+  const testimonialsTrack = document.getElementById('testimonialsTrack');
+  if (testimonialsTrack) {
+    const STAR = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>';
+    const GOOGLE_G = '<svg viewBox="0 0 48 48"><path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/><path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/><path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/><path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/></svg>';
+    const REVIEWS = [
+      { name: 'Gokul Sharma', when: '4 months ago', quote: "Great experience with this duct cleaning company! Their team was professional, on time, and very thorough. Noticed a big improvement in air quality right away. Highly recommend!" },
+      { name: 'Pawan Sidhu', when: '3 months ago', quote: "The furnace is now operating smoothly and efficiently, and we feel confident in the quality of the service provided. I would highly recommend this company to anyone seeking dependable and professional furnace maintenance and repair services." },
+      { name: 'Peter Glossop', when: '3 months ago', quote: "Prompt efficient, and they found a couple of small problems and sorted them out for no charge. Definitely be using them again." },
+      { name: 'Darshan Manjunath', when: '11 months ago', quote: "I had an ongoing renovation work and requested for the duct cleaning. The two gentlemen came and cleaned my vents thoroughly! They did a neat job for a very good price. Highly recommend them!" },
+      { name: 'Jenn Ball', when: '3 months ago', quote: "Quick, effective and did a great job! 10/10 would recommend!" },
+      { name: 'The Spartan Leonidas', when: '3 weeks ago', quote: "My dad called these guys to install a heat pump at our house and they did an amazing job. The whole install was clean and everything looked really professional. You can tell they actually care about doing the job right instead of rushing through it." }
+    ];
+
+    function reviewCard(r) {
+      return `<div class="testimonial-card">
+        <div class="testimonial-google-badge" title="Google Review">${GOOGLE_G}</div>
+        <div class="stars">${STAR.repeat(5)}</div>
+        <p class="quote">"${r.quote}"</p>
+        <div class="testimonial-who">
+          <div class="testimonial-avatar">${r.name.charAt(0)}</div>
+          <div><b>${r.name}</b><span>${r.when} · Google Review</span></div>
+        </div>
+      </div>`;
+    }
+
+    testimonialsTrack.innerHTML = REVIEWS.map(reviewCard).join('') + REVIEWS.map(reviewCard).join('');
+  }
+
+  /* Preloader: walking handyman intro — only replays on an actual page
+     refresh, not when navigating back to Home via a link/logo click. */
   const preloader = document.getElementById('preloader');
   if (preloader) {
-    const plWalker = document.getElementById('plWalker');
-    const plBrand = document.getElementById('plBrand');
-    const plOverlay = document.getElementById('plOverlay');
-    const plSkip = document.getElementById('plSkip');
-    let plTimers = [];
+    const navEntry = performance.getEntriesByType('navigation')[0];
+    const isReload = navEntry ? navEntry.type === 'reload' : false;
+    const alreadySeen = sessionStorage.getItem('fsm-intro-seen');
 
-    plTimers.push(setTimeout(() => plWalker.classList.add('pl-arrived'), 2200));
-    plTimers.push(setTimeout(() => plBrand.classList.add('pl-show'), 2650));
-    plTimers.push(setTimeout(() => plOverlay.classList.add('pl-reveal'), 3500));
-    plTimers.push(setTimeout(() => preloader.classList.add('pl-hidden'), 4200));
-
-    plSkip.addEventListener('click', () => {
-      plTimers.forEach(clearTimeout);
+    if (alreadySeen && !isReload) {
       preloader.classList.add('pl-hidden');
-    });
+    } else {
+      sessionStorage.setItem('fsm-intro-seen', '1');
+
+      const plWalker = document.getElementById('plWalker');
+      const plBrand = document.getElementById('plBrand');
+      const plOverlay = document.getElementById('plOverlay');
+      const plSkip = document.getElementById('plSkip');
+      let plTimers = [];
+
+      plTimers.push(setTimeout(() => plWalker.classList.add('pl-arrived'), 2200));
+      plTimers.push(setTimeout(() => plBrand.classList.add('pl-show'), 2650));
+      plTimers.push(setTimeout(() => plOverlay.classList.add('pl-reveal'), 3500));
+      plTimers.push(setTimeout(() => preloader.classList.add('pl-hidden'), 4200));
+
+      plSkip.addEventListener('click', () => {
+        plTimers.forEach(clearTimeout);
+        preloader.classList.add('pl-hidden');
+      });
+    }
   }
 
   /* Theme toggle */
