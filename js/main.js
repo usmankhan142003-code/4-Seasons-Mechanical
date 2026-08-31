@@ -191,8 +191,8 @@
       "For anything urgent like that, don't wait on me — call (403) 796-4600 now, we're available 24/7."
     ],
     years: [
-      "We've been proudly serving Calgary and the surrounding areas for over 20 years, with 500+ jobs completed and a 5.0★ customer rating.",
-      "4 Seasons Mechanical has over 20 years of experience in the Calgary area — 500+ jobs completed and counting."
+      "We've been proudly serving Calgary and the surrounding areas for over 10 years, with 500+ jobs completed and a 5.0★ customer rating.",
+      "4 Seasons Mechanical has over 10 years of experience in the Calgary area — 500+ jobs completed and counting."
     ],
     basement: [
       "We offer complete mechanical packages for legal basement suites — HVAC, plumbing, and electrical all covered. Contact us to discuss your project.",
