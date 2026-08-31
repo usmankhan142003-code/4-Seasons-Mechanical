@@ -411,6 +411,29 @@ nav.main-nav a.active { color: var(--blue-600); }
   height: auto;
   filter: drop-shadow(var(--shadow));
 }
+.hero-visual-card .hero-illustration.no-extra-shadow {
+  filter: none;
+}
+.hero-duo {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  width: 100%;
+}
+.hero-duo .hero-illustration {
+  width: auto;
+  height: auto;
+}
+.hero-duo .duo-primary {
+  max-width: 58%;
+  z-index: 2;
+  margin-right: -8%;
+}
+.hero-duo .duo-secondary {
+  max-width: 46%;
+  z-index: 1;
+}
 
 /* ── Service Icon Badges (mirrors logo badges) ───────────── */
 .badge-icon {
